@@ -1,12 +1,20 @@
-csv-anchor
+ember-csv
 ==============================================================================
 
-This addon provides a simple component for generating csv download URLs from 2D arrays
+This addon provides ember CSV utilities.
 
-So, doing this:
+Currently, it just provides a component for generating a download anchor based on CSV modeled data. So, doing this:
 
 ```handlebars
-{{component "csv-anchor@download-url" csvData=csvData}}
+{{component "ember-csv@file-anchor" data=data}}
+```
+
+```javascript
+// 2D array of CSV rows
+this.set('data', [
+  ['First Name', 'Last Name'],
+  ['Foo', 'Bar']
+]);
 ```
 
 ...would yield something like this:
@@ -34,13 +42,7 @@ ember install csv-anchor
 Usage
 ------------------------------------------------------------------------------
 
-The download-url component simply takes in 1 property, csvData:
-
-```handlebars
-{{component "csv-anchor@download-url" csvData=csvData}}
-```
-
-csvData is expected to be a 2D array of strings, representing the rows of data. See the headline section for more information.
+See the dummy app for usage details.
 
 Contributing
 ------------------------------------------------------------------------------
