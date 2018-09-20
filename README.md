@@ -42,7 +42,18 @@ ember install csv-anchor
 Usage
 ------------------------------------------------------------------------------
 
-See the dummy app for usage details.
+You can override the downloaded file name by specifying the `fileName` argument:
+
+```handlebars
+{{component "ember-csv@file-anchor"
+  data=data
+  fileName="foobar"
+}}
+```
+
+...with this argument, the download will show up as `foobar.csv` on your computer.
+
+You can always play with the dummy app for usage details (See contributing).
 
 Contributing
 ------------------------------------------------------------------------------

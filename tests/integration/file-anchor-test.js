@@ -21,7 +21,7 @@ moduleForComponent('ember-csv@file-anchor', 'Integration | Component | file-anch
   }
 });
 
-test('it renders Data URI correctly with a populated 2D array', function(assert) {
+test('it renders correctly when utilizing data URI', function(assert) {
   set(window, 'navigator.msSaveOrOpenBlob', null);
 
   this.render(hbs`{{component "ember-csv@file-anchor" data=data}}`);
@@ -30,9 +30,14 @@ test('it renders Data URI correctly with a populated 2D array', function(assert)
     'data:text/csv;charset=utf-8;base64,Rmlyc3QgTmFtZSxMYXN0IE5hbWUKRm9vLEJhcg==',
     'The anchors href is correctly rendered when using Data URI'
   );
+
+  assert.equal(find('a').getAttribute('download'),
+    `download.csv`,
+    'The anchors default download attribute is correctly rendered'
+  );
 });
 
-test('it attaches click event for MS browsers', async function(assert) {
+test('it renders correctly when utilizing msSaveOrOpenBlob', async function(assert) {
   set(window, 'navigator.msSaveOrOpenBlob', this.sandbox.stub());
 
   this.render(hbs`{{component "ember-csv@file-anchor" data=data}}`);
@@ -48,3 +53,26 @@ test('it attaches click event for MS browsers', async function(assert) {
     'msSaveOrOpenBlob is called with the correct arguments'
   );
 });
+
+test('it renders correctly when fileName arg is overriden', async function(assert) {
+  set(window, 'navigator.msSaveOrOpenBlob', this.sandbox.stub());
+  const fileName = this.set('fileName', 'foobar');
+
+  this.render(hbs`{{component "ember-csv@file-anchor" data=data fileName=fileName}}`);
+
+  assert.equal(find('a').getAttribute('download'),
+    `${fileName}.csv`,
+    'The anchors download attribute is correctly rendered'
+  );
+
+  await click('a');
+
+  const reducedString = this.get('data').reduce(
+    (csvString, csvRow) => `${csvString}${csvRow.join()}\n`, ''
+  ).trim();
+  const expectedBlob = new Blob([reducedString], { type: 'text/csv', endings: 'native' });
+
+  assert.ok(window.navigator.msSaveOrOpenBlob.calledWithExactly(expectedBlob, `${fileName}.csv`),
+    'msSaveOrOpenBlob is called with the correct arguments & overrode fileName arg'
+  );
+})
