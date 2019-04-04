@@ -27,17 +27,17 @@ export default Component.extend({
         (csvString, csvRow) => `${csvString}${csvRow.join()}\n`, ''
       ).trim();
 
+      const blob = new Blob([reducedString], { type: 'text/csv', endings: 'native' });
+
       if (get(window, 'navigator.msSaveOrOpenBlob')) {
         // Use msSaveOrOpenBlob if it exists because MSFT browsers
         // don't support Data URI's in the anchor href
         this.set('click', () => {
-          const blob = new Blob([reducedString], { type: 'text/csv', endings: 'native' });
-
           window.navigator.msSaveOrOpenBlob(blob, downloadName);
         });
       } else {
         // Else, attach the Data URI for all other modern browsers
-        this.set('href', `data:text/csv;charset=utf-8;base64,${window.btoa(reducedString)}`);
+        this.set('href', URL.createObjectURL(blob));
       }
     }
   }
