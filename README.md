@@ -36,7 +36,7 @@ Installation
 ------------------------------------------------------------------------------
 
 ```
-ember install csv-anchor
+ember install ember-csv
 ```
 
 Usage
